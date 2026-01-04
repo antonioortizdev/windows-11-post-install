@@ -536,7 +536,7 @@ Removes old GPU drivers and installs the latest ones cleanly, avoiding conflicts
 **Protocol**
 
 1. Download the latest GPU driver but **do not install it yet**.
-2. Download and extract **DDU**.fileciteturn0file0
+2. Download and extract latest version of DDU [here](https://www.wagnardsoft.com/forums/viewtopic.php?t=5471).
 3. Disconnect the network cable or disable Wi-Fi (critical so Windows Update does not auto-install a generic driver).
 4. Run DDU, select **GPU** and your vendor.
 5. Click **Clean and restart**.
