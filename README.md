@@ -38,7 +38,7 @@ Once the restore point is created, you may proceed with the tweaks below.
 - [4. BIOS & Hardware Tweaks](#4-bios--hardware-tweaks)
   - [4.1 Enable XMP / DOCP / EXPO for RAM](#41-enable-xmp--docp--expo-for-ram)
   - [4.2 Enable Resizable BAR](#42-enable-resizable-bar)
-  - [4.3 Fan Curves (Q-Fan / Smart Fan)](#43-fan-curves-q-fan-smart-fan)
+  - [4.3 Fan Curves (Q-Fan / Smart Fan)](#43-fan-curves-q-fan--smart-fan)
 - [5. GPU Drivers & Control Panel](#5-gpu-drivers--control-panel)
   - [5.1 Clean Driver Install with DDU](#51-clean-driver-install-with-ddu)
   - [5.2 NVIDIA Control Panel for Performance](#52-nvidia-control-panel-for-performance)
@@ -269,7 +269,9 @@ If you observe stuttering or instability, turn this option **Off** and reboot.
 
 **Where:**
 Control Panel → Hardware and Sound → Power Options → System Settings
-`Control Panel\Hardware and Sound\Power Options\System Settings`
+```
+Control Panel\Hardware and Sound\Power Options\System Settings
+```
 
 **What it does:**
 Fast Startup performs a hybrid shutdown (partial hibernation). Disabling it forces a full shutdown so the kernel and drivers are fully reinitialized on boot, which can improve stability and avoid carrying over “stale” state.
@@ -329,7 +331,9 @@ Do **not** reboot yet — finish the registry tweaks below and then reboot once.
 ### 2.4 NetworkThrottlingIndex
 
 **Where (Registry):**
-`HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile`
+```
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
+```
 
 **What it does:**
 Controls Windows’ multimedia network throttling. By default, it limits how aggressively non-multimedia network traffic is processed to keep CPU time available for audio/video tasks.
@@ -371,7 +375,9 @@ This guide explains both the tweak and how to revert it safely.
 ### 2.5 MenuShowDelay (UI menu delay)
 
 **Where (Registry):**
-`HKEY_CURRENT_USER\Control Panel\Desktop`
+```
+HKEY_CURRENT_USER\Control Panel\Desktop
+```
 
 **What it does:**
 Reduces or removes the delay before Windows opens menus, making the desktop feel snappier (pure UX).
@@ -544,17 +550,96 @@ Follow this guide step by step. [How to use DDU tutorial.](https://www.wagnardso
 
 ### 5.2 NVIDIA Control Panel for Performance
 
-**Where:**
-Right-click desktop → **NVIDIA Control Panel** → **Manage 3D settings**
+#### Where to find these options
 
-**Suggested global settings**
+1. Right-click the Windows desktop  
+2. Click **NVIDIA Control Panel**  
+3. In the left sidebar, open:
 
-- **Low Latency Mode:** `On` or `Ultra` (if your GPU is often at 99%).
-- **Power management mode:** `Prefer maximum performance`.
-- **Texture filtering – Quality:** `High performance`.
-- **Vertical sync:** `Off` (use in-game V-Sync or G-Sync/Freesync instead, if desired).fileciteturn0file0
+```
+3D Settings → Manage 3D Settings
+```
 
-You can also set these per-game in the **Program Settings** tab.
+You will see two tabs:
+
+- **Global Settings** — applies to all games  
+- **Program Settings** — allows per‑game overrides
+
+All recommendations below refer to **Global Settings** unless stated otherwise.
+
+---
+
+#### Recommended Global Settings (Latency‑Focused)
+
+Scroll through the list and set:
+
+#### Low Latency Mode
+```
+Low Latency Mode → On
+```
+(or **Ultra** if your GPU frequently reaches 99% utilization)
+
+**Purpose**
+- Reduces the render queue depth  
+- Improves click‑to‑shot latency in competitive titles  
+
+---
+
+#### Power Management Mode
+```
+Power management mode → Prefer maximum performance
+```
+
+**Purpose**
+- Prevents downclocking during gameplay  
+- Improves frametime stability and 1% lows  
+
+---
+
+#### Texture Filtering — Quality
+```
+Texture filtering – Quality → High performance
+```
+
+**Purpose**
+- Disables visual‑quality heuristics  
+- Prioritizes responsiveness and FPS  
+
+---
+
+#### Vertical Sync
+```
+Vertical sync → Off
+```
+
+**Why**
+- Avoids driver‑forced V‑Sync latency
+- Lets the **game** or **G‑Sync / FreeSync** handle frame presentation
+
+> If you use G‑Sync / FreeSync:
+> keep **V‑Sync Off in NVIDIA Panel** and configure V‑Sync inside the game.
+
+---
+
+#### Per‑Game Overrides (Best Practice)
+
+To apply these settings only to a specific game:
+
+1. Open the **Program Settings** tab  
+2. Select the game executable  
+3. Apply the same options there
+
+Typical approach:
+
+- **Esports / shooters** → latency profile  
+- **Single‑player titles** → quality‑balanced profile
+
+---
+
+#### Additional Notes
+
+- These changes primarily improve **latency consistency**, not just FPS  
+- Always test per‑title — some engines behave better with defaults
 
 ---
 
