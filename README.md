@@ -867,7 +867,7 @@ After this, Windows (and Xbox Game Bar, if reinstalled) can reclaim those protoc
 
 PBO2 Tuner is **not stored inside the repository** to keep the repo clean and lightweight.
 
-Download the packaged bundle from the project’s GitHub Release page [here](/releases/tag/tools-5800x3d-undervolt-v1):
+Download the packaged bundle from the project’s GitHub Release page [here](https://github.com/antonioortizdev/.windows-11-post-install/releases/tag/tools-5800x3d-undervolt-v1):
 
 Then:
 
