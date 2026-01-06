@@ -43,10 +43,11 @@ Once the restore point is created, you may proceed with the tweaks below.
   - [5.1 Clean Driver Install with DDU](#51-clean-driver-install-with-ddu)
   - [5.2 NVIDIA Control Panel for Performance](#52-nvidia-control-panel-for-performance)
   - [5.3 AMD Adrenalin for Performance](#53-amd-adrenalin-for-performance)
-- [6. Software Blacklist & App Settings](#6-software-blacklist--app-settings)
+- [6. Apps, Overlays & Helper Scripts](#6-apps-overlays--helper-scripts)
   - [6.1 Third-Party Antivirus](#61-third-party-antivirus)
   - [6.2 “Optimizer” Tools (CCleaner, Driver Booster, etc.)](#62-optimizer-tools-ccleaner-driver-booster-etc)
   - [6.3 Discord Settings](#63-discord-settings)
+  - [6.4 Xbox Game Bar Annoyance Fix Script (`ms-gamebar-annoyance.bat`)](#64-xbox-game-bar-annoyance-fix-script-ms-gamebar-annoyancebat)
 
 ---
 
@@ -674,7 +675,7 @@ AMD **Adrenalin** → **Gaming → Graphics**
 
 ---
 
-## 6. Software Blacklist & App Settings
+## 6. Apps, Overlays & Helper Scripts
 
 ### 6.1 Third-Party Antivirus
 
@@ -726,7 +727,120 @@ These changes reduce unnecessary overlay rendering and potential input lag.
 
 ---
 
-If you want, we can now turn this into two profiles inside the same file:
+### 6.4 Xbox Game Bar Annoyance Fix Script (`ms-gamebar-annoyance.bat`)
 
-- **Safe baseline** (only the non-invasive tweaks)
-- **Aggressive competitive mode** (adds debloat, VBS off, AppX removals, etc.).
+**File:** `./scripts/ms-gamebar-annoyance.bat`  
+**Type:** Hybrid BAT + PowerShell script (plain text, fully inspectable)
+
+**Problem it solves**
+
+If you uninstall **Xbox Game Bar / Gaming Overlay**, Windows may still try to handle `ms-gamebar://` (and related protocols) by:
+
+- Prompting you to install Xbox Game Bar again, or
+- Opening the Microsoft Store when a game or the system triggers those URLs.
+
+This script lets you:
+
+- **Apply a fix** that disables GameDVR capture and neutralizes the `ms-gamebar*` protocols so they no longer cause prompts.
+- **Restore** the original behavior later if you decide to use Game Bar again.
+
+#### How to run it
+
+1. Open **File Explorer** and navigate to the root folder of this toolkit.
+2. Go to the `scripts` folder.
+3. Right-click `ms-gamebar-annoyance.bat` → **Run as administrator**, or from an elevated PowerShell / Terminal:
+
+   ```powershell
+   cd <path-to-this-toolkit-root>
+   .\scripts\ms-gamebar-annoyance.bat
+   ```
+
+A small dialog will appear:
+
+Yes → Apply (activate the fix)
+
+No → Restore (undo the fix)
+
+Cancel → Exit (no changes)
+
+What “Apply” does (Yes in the popup)
+Disables GameDVR / Game Bar capture for the current user
+
+Sets these values to 0:
+
+```
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR\AppCaptureEnabled
+```
+
+```
+HKCU\System\GameConfigStore\GameDVR_Enabled
+```
+
+Effect: GameDVR / Game Bar capture is turned off for your user.
+
+Neutralizes Game Bar URL protocols
+
+For each protocol:
+
+```
+ms-gamebar
+```
+```
+ms-gamebarservices
+```
+```
+ms-gamingoverlay
+```
+
+The script, under HKCR, ensures the keys exist and then:
+
+Adds a NoOpenWith value so Windows stops suggesting apps to handle them.
+
+Sets the default shell\open\command to:
+
+```
+%SystemRoot%\System32\systray.exe
+```
+
+systray.exe is a built-in, benign system tray process — effectively a no-op handler.
+
+Net effect: anything trying to open ms-gamebar://... will be handled silently by systray.exe without Store/Game Bar prompts.
+
+Self-test
+
+At the end, the script runs:
+
+```powershell
+start ms-gamebar://annoyance
+```
+
+With the fix applied, this should not show any Xbox Game Bar or Store pop-up.
+
+What “Restore” does (No in the popup)
+If you choose No:
+
+Re-enables GameDVR for the current user:
+
+```
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR\AppCaptureEnabled = 1
+```
+```
+HKCU\System\GameConfigStore\GameDVR_Enabled = 1
+```
+
+Removes the protocol overrides:
+
+Deletes NoOpenWith from:
+
+```
+HKCR\ms-gamebar
+```
+```
+HKCR\ms-gamebarservices
+```
+```
+HKCR\ms-gamingoverlay
+```
+Deletes the custom shell branch under each of those keys.
+
+After this, Windows (and Xbox Game Bar, if reinstalled) can reclaim those protocols and behave as originally intended.
