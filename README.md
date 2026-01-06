@@ -1036,7 +1036,7 @@ PBO2 Tuner changes are **not flashed permanently** — they are session‑based.
 
 ---
 
-## 7. Resouces
+## 7. Resources
 - https://github.com/AveYo/Gaming
 - https://github.com/PrimeO7/How-to-undervolt-AMD-RYZEN-5800X3D-Guide-with-PBO2-Tuner?tab=readme-ov-file#1-what-are-we-doing
 - https://www.overclock.net/threads/corecycler-tool-for-testing-single-core-stability-e-g-curve-optimizer-settings.1777398/page-45?post_id=28999750#post-28999750
