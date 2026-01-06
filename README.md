@@ -964,37 +964,101 @@ Depending on your PBO2 Tuner configuration, it may:
 
 ---
 
-#### Optional — apply automatically on startup
+### Create scheduled task — `UndervoltCPU`
 
-Only do this **after confirming stability**.
+1. Open **Task Scheduler**
+2. Click **Create Task…** (do NOT use “Create Basic Task”)
 
-**Method A — Startup folder**
+Configure the task as follows:
 
-1. Press **Win + R**
-2. Type:
+---
 
-```
-shell:startup
-```
+#### General
 
-3. Create a shortcut to:
+- **Name:**
 
 ```
-<toolkit>\scripts\undervolt_cpu_ryzen7_5800x3d.bat
+UndervoltCPU
+```
+
+- Security options:
+
+```
+[✓] Run with highest privileges
+```
+
+- Configure for: Windows 10 / Windows 11 (either is fine)
+
+---
+
+#### Trigger
+
+Add a new trigger:
+
+- Begin the task → **At log on**
+- Specific user → your account
+- Enabled → Yes
+
+---
+
+#### Action
+
+- Action → **Start a program**
+
+Program/script:
+
+```
+C:\Windows\System32\cmd.exe
+```
+
+Add arguments:
+
+```
+/c "<path-to-toolkit>\scripts\undervolt_cpu_ryzen7_5800x3d.bat"
+```
+
+(Replace `<path-to-toolkit>` with the actual directory path)
+
+This ensures the `.bat` runs **inside an elevated cmd context**
+and applies the undervolt automatically at every login.
+
+---
+
+#### Recommended Settings
+
+In the **Settings** tab:
+
+- Enable:
+
+```
+[✓] Run task as soon as possible after a scheduled start is missed
+```
+
+- Optional:
+
+Uncheck AC‑power dependency if using a laptop:
+
+```
+[ ] Start only if the computer is on AC power
 ```
 
 ---
 
-**Method B — Task Scheduler (recommended)**
+### Result
 
-Recommended options:
+The task:
 
-- Trigger → **At logon**
-- Run with highest privileges
-- Run whether user is logged in or not
+- runs **at every logon**
+- executes the undervolt script automatically
+- applies PBO2 + Curve Optimizer values for the session
+- runs **with administrator privileges**
+- does **not** show UAC prompts
 
-Target = this `.bat` script  
-(or `PBO2 tuner.exe` with the same arguments)
+To disable it later, simply:
+
+- open Task Scheduler
+- disable or delete the `UndervoltCPU` task
+- reboot (values are session‑based)
 
 ---
 
